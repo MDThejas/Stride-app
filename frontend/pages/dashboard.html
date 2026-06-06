@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRIDE — Dashboard</title>
+  <link rel="stylesheet" href="../styles/global.css">
+  <link rel="stylesheet" href="../styles/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="stride-logo">
+        <div class="logo-mark">S</div>
+        <span class="logo-text">STR<span class="logo-accent">I</span>DE</span>
+      </div>
+    </div>
+
+    <!-- Streak chip -->
+    <div class="sidebar-streak" id="sidebar-streak">
+      <div>
+        <div class="ss-num" id="ss-num">0</div>
+        <div class="ss-label">day streak</div>
+      </div>
+      <div class="ss-fire">🔥</div>
+    </div>
+
+    <div class="sidebar-section-label">Main</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item" data-section="today" onclick="showSection('today')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Today
+      </button>
+      <button class="nav-item" data-section="manage" onclick="showSection('manage')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        My Activities
+      </button>
+      <button class="nav-item" data-section="stats" onclick="showSection('stats')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Statistics
+      </button>
+      <button class="nav-item" data-section="progress" onclick="showSection('progress')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        Progress
+      </button>
+      <button class="nav-item" data-section="goals" onclick="showSection('goals')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Goals
+      </button>
+      <div class="sidebar-section-label" style="padding-top:14px">Social</div>
+      <button class="nav-item" data-section="social" onclick="showSection('social')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Friends
+      </button>
+      <button class="nav-item" data-section="email" onclick="showSection('email')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Weekly Email
+      </button>
+      <div class="sidebar-section-label" style="padding-top:14px">Rewards</div>
+      <button class="nav-item" data-section="achievements" onclick="showSection('achievements')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        Achievements
+      </button>
+      <button class="nav-item" data-section="profile" onclick="showSection('profile')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        Profile
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebar-avatar">?</div>
+        <div class="user-meta">
+          <div class="user-name"  id="sidebar-name">Loading…</div>
+          <div class="user-email" id="sidebar-email"></div>
+        </div>
+        <button class="theme-toggle" id="dash-theme-btn" title="Toggle theme">☀️</button>
+        <button class="logout-btn" id="logout-btn" title="Log out">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══════════════════════════════════════════════ -->
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ══ TODAY ══════════════════════════════════════ -->
+      <section id="sec-today" class="section hidden">
+        <div class="section-header">
+          <div>
+            <h1 class="section-title">Today's Plan</h1>
+            <p class="section-sub">Tick off activities as you complete them</p>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="showSection('manage')">+ Manage activities</button>
+        </div>
+
+        <div class="today-hero">
+          <div>
+            <div class="today-date" id="today-date">Today</div>
+            <div class="today-sub" id="today-progress-label">0 of 0 activities done</div>
+            <div class="today-bar-wrap">
+              <div class="today-bar-label">
+                <span>Progress</span>
+                <strong id="today-bar-pct">0%</strong>
+              </div>
+              <div class="today-bar">
+                <div class="today-bar-fill" id="today-bar-fill" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="today-chips">
+              <div class="today-chip chip-streak" id="today-streak-chip">🔥 0 day streak</div>
+            </div>
+          </div>
+          <div class="today-ring-wrap" style="position:relative;width:88px;height:88px;flex-shrink:0">
+            <svg width="88" height="88" viewBox="0 0 88 88" style="transform:rotate(-90deg)">
+              <circle class="ring-track" cx="44" cy="44" r="36"/>
+              <circle class="ring-fill" id="ring-fill" cx="44" cy="44" r="36"
+                style="stroke-dasharray:226.2;stroke-dashoffset:226.2;stroke:var(--p);fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .8s ease"/>
+            </svg>
+            <div class="ring-center">
+              <div class="ring-pct" id="ring-pct">0%</div>
+              <div class="ring-label-small">done</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="done-banner" id="done-banner">
+          <div class="done-banner-emoji">🎉</div>
+          <div>
+            <h3>All done for today!</h3>
+            <p>Amazing work — streak keeps going. See you tomorrow!</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⚡ Activities</div>
+          <div class="today-list" id="today-list"></div>
+        </div>
+      </section>
+
+      <!-- ══ MY ACTIVITIES ══════════════════════════════ -->
+      <section id="sec-manage" class="section hidden">
+        <div class="section-header">
+          <div>
+            <h1 class="section-title">My Activities</h1>
+            <p class="section-sub">Create, edit and manage recurring activities</p>
+          </div>
+          <button class="btn btn-primary" id="show-add-btn">+ New activity</button>
+        </div>
+
+        <div class="card af-form" id="af-form">
+          <div class="card-title" id="af-form-title">+ New Activity</div>
+          <div class="field">
+            <label>Type</label>
+            <div class="af-type-row">
+              <button class="af-pill active" data-type="🏃 Running">🏃 Running</button>
+              <button class="af-pill" data-type="🚴 Cycling">🚴 Cycling</button>
+              <button class="af-pill" data-type="🏊 Swimming">🏊 Swimming</button>
+              <button class="af-pill" data-type="💪 Gym">💪 Gym</button>
+              <button class="af-pill" data-type="🧘 Yoga">🧘 Yoga</button>
+              <button class="af-pill" data-type="🚶 Walking">🚶 Walking</button>
+              <button class="af-pill" data-type="⚽ Sport">⚽ Sport</button>
+              <button class="af-pill" data-type="🏋️ Cardio">🏋️ Cardio</button>
+              <button class="af-pill" data-type="📚 Study">📚 Study</button>
+              <button class="af-pill" data-type="🎯 Other">🎯 Other</button>
+            </div>
+          </div>
+          <div class="af-grid">
+            <div class="field"><label>Name</label><input class="form-input" id="af-name" type="text" placeholder="Morning run, Leg day…"></div>
+            <div class="field"><label>Duration (min)</label><input class="form-input" id="af-dur" type="number" value="30" min="1"></div>
+            <div class="field"><label>Intensity</label>
+              <select class="form-select" id="af-int">
+                <option value="Low">🟢 Low</option>
+                <option value="Medium" selected>🟡 Medium</option>
+                <option value="High">🔴 High</option>
+              </select>
+            </div>
+            <div class="field"><label>Recurrence</label>
+              <select class="form-select" id="af-rec">
+                <option value="daily" selected>Every day</option>
+                <option value="weekly">Specific days</option>
+                <option value="monthly">Once a month</option>
+                <option value="once">One time</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label>Days <span style="font-weight:400;color:var(--t3)">(for weekly)</span></label>
+              <div class="days-row" id="days-row">
+                <label class="day-lbl"><input type="checkbox" class="day-cb" value="1" checked> Mon</label>
+                <label class="day-lbl"><input type="checkbox" class="day-cb" value="2" checked> Tue</label>
+                <label class="day-lbl"><input type="checkbox" class="day-cb" value="3" checked> Wed</label>
+                <label class="day-lbl"><input type="checkbox" class="day-cb" value="4" checked> Thu</label>
+                <label class="day-lbl"><input type="checkbox" class="day-cb" value="5" checked> Fri</label>
+                <label class="day-lbl"><input type="checkbox" class="day-cb" value="6"> Sat</label>
+                <label class="day-lbl"><input type="checkbox" class="day-cb" value="0"> Sun</label>
+              </div>
+            </div>
+            <div class="field full">
+              <label>Note <span style="font-weight:400;color:var(--t3)">(optional)</span></label>
+              <input class="form-input" id="af-note" type="text" placeholder="Outdoor only, bring water…">
+            </div>
+          </div>
+          <div class="af-btns">
+            <button class="btn btn-primary" id="af-submit">Save Activity</button>
+            <button class="btn btn-ghost"   id="af-cancel">Cancel</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📋 All activities</div>
+          <div id="manage-list"></div>
+        </div>
+      </section>
+
+      <!-- ══ STATISTICS ══════════════════════════════════ -->
+      <section id="sec-stats" class="section hidden">
+        <div class="section-header">
+          <div><h1 class="section-title">Statistics</h1><p class="section-sub">Your activity breakdown and trends</p></div>
+        </div>
+        <div class="stat-cards-row">
+          <div class="stat-card"><div class="stat-label">Total completed</div><div class="stat-value" id="st-total">—</div><div class="stat-sub">all time</div></div>
+          <div class="stat-card"><div class="stat-label">Time invested</div><div class="stat-value" id="st-time" style="color:var(--cyan)">—</div><div class="stat-sub">approx.</div></div>
+          <div class="stat-card"><div class="stat-label">Best streak</div><div class="stat-value" id="st-streak" style="color:var(--amber)">—</div><div class="stat-sub">personal best</div></div>
+          <div class="stat-card"><div class="stat-label">Top activity</div><div class="stat-value" id="st-fav" style="font-size:28px">—</div><div class="stat-sub">most set up</div></div>
+        </div>
+        <div class="grid-2" style="margin-bottom:18px">
+          <div class="card">
+            <div class="period-row">
+              <div class="card-title" style="margin-bottom:0">📊 Daily completions</div>
+              <div class="period-btns">
+                <button class="period-btn active" onclick="setPeriod(7,this)">7D</button>
+                <button class="period-btn" onclick="setPeriod(30,this)">30D</button>
+              </div>
+            </div>
+            <div style="margin-top:14px"><div class="chart-wrap"><canvas id="stats-bar"></canvas></div></div>
+          </div>
+          <div class="card">
+            <div class="card-title">🍩 Activity types</div>
+            <div class="chart-wrap"><canvas id="stats-pie"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📅 This week's activity tracker</div>
+          <div style="font-size:12px;color:var(--t3);margin-bottom:12px;display:flex;gap:14px">
+            <span style="display:inline-flex;align-items:center;gap:5px">
+              <span style="width:12px;height:12px;background:var(--green-dim);border:1px solid var(--green-border);border-radius:3px;display:inline-block"></span> Done ✓
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:5px">
+              <span style="width:12px;height:12px;background:var(--bg-4);border:1px solid var(--border);border-radius:3px;display:inline-block"></span> Pending
+            </span>
+          </div>
+          <div class="week-tracker" id="week-tracker"></div>
+        </div>
+      </section>
+
+      <!-- ══ PROGRESS ════════════════════════════════════ -->
+      <section id="sec-progress" class="section hidden">
+        <div class="section-header">
+          <div><h1 class="section-title">Progress</h1><p class="section-sub" id="prog-label">Compare your performance over time</p></div>
+        </div>
+        <div class="progress-period-tabs">
+          <button class="prog-tab active" onclick="window.__setProgPeriod('week',this)">Last Week</button>
+          <button class="prog-tab" onclick="window.__setProgPeriod('month',this)">Last Month</button>
+          <button class="prog-tab" onclick="window.__setProgPeriod('half',this)">Last 6 Months</button>
+          <button class="prog-tab" onclick="window.__setProgPeriod('year',this)">Last Year</button>
+        </div>
+        <div class="progress-kpi-row" id="prog-kpis">
+          <div class="kpi-card"><div class="kpi-icon">⚡</div><div class="kpi-val">—</div><div class="kpi-label">Activities</div></div>
+          <div class="kpi-card"><div class="kpi-icon">⏱️</div><div class="kpi-val">—</div><div class="kpi-label">Time</div></div>
+          <div class="kpi-card"><div class="kpi-icon">📅</div><div class="kpi-val">—</div><div class="kpi-label">Active days</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📈 Trend — this period vs previous</div>
+          <div class="chart-wrap" style="height:240px"><canvas id="prog-chart"></canvas></div>
+        </div>
+      </section>
+
+      <!-- ══ GOALS ═══════════════════════════════════════ -->
+      <section id="sec-goals" class="section hidden">
+        <div class="section-header">
+          <div><h1 class="section-title">Goals</h1><p class="section-sub">Set targets, track progress</p></div>
+          <button class="btn btn-primary" id="add-goal-btn">+ Add goal</button>
+        </div>
+        <div class="card" id="goal-form-card" style="display:none;margin-bottom:18px">
+          <div class="card-title">🎯 New goal</div>
+          <div class="goal-form-grid">
+            <div class="field"><label>Goal name *</label><input class="form-input" id="goal-name" type="text" placeholder="Run 3x per week…"></div>
+            <div class="field"><label>Target <span style="font-weight:400;color:var(--t3)">(optional)</span></label><input class="form-input" id="goal-target" type="number" placeholder="5" min="1"></div>
+            <div class="field"><label>Unit <span style="font-weight:400;color:var(--t3)">(optional)</span></label><input class="form-input" id="goal-unit" type="text" placeholder="workouts, km, pages…"></div>
+            <div class="field"><label>Period</label>
+              <select class="form-select" id="goal-period">
+                <option value="daily">Daily</option>
+                <option value="weekly" selected>Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+          </div>
+          <div class="goal-form-btns">
+            <button class="btn btn-primary" id="save-goal-btn">Save goal</button>
+            <button class="btn btn-ghost"   id="cancel-goal-btn">Cancel</button>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title">🎯 Active goals</div><div id="goals-active"></div></div>
+          <div class="card"><div class="card-title" style="color:var(--green)">✅ Completed</div><div id="goals-done"></div></div>
+        </div>
+      </section>
+
+      <!-- ══ ACHIEVEMENTS ════════════════════════════════ -->
+      <section id="sec-achievements" class="section hidden">
+        <div class="section-header">
+          <div><h1 class="section-title">Achievements</h1><p class="section-sub">Badges earned and milestones reached</p></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title">🏅 Badges</div><div class="badges-grid" id="badges-grid"></div></div>
+          <div class="card"><div class="card-title" style="color:var(--amber)">🏆 Milestones</div><div id="milestones-list"></div></div>
+        </div>
+      </section>
+
+      <!-- ══ SOCIAL / FRIENDS ══════════════════════════════ -->
+      <section id="sec-social" class="section hidden">
+        <div class="section-header">
+          <div><h1 class="section-title">Friends</h1><p class="section-sub">Add friends, see their streaks</p></div>
+        </div>
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-title">➕ Add a friend</div>
+          <div class="add-friend-row">
+            <input class="form-input" id="friend-email" type="email" placeholder="Enter their email address…">
+            <button class="btn btn-primary" id="add-friend-btn">Send request</button>
+          </div>
+          <div style="font-size:12px;color:var(--t3)">They must have a STRIDE account. Your email must be saved in your profile settings.</div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title">📬 Pending requests</div><div id="pending-requests"></div></div>
+          <div class="card"><div class="card-title">👥 My friends</div><div id="friends-list"></div></div>
+        </div>
+      </section>
+
+      <!-- ══ WEEKLY EMAIL ══════════════════════════════════ -->
+      <section id="sec-email" class="section hidden">
+        <div class="section-header">
+          <div><h1 class="section-title">Weekly Email</h1><p class="section-sub">Get a summary of your week every Sunday</p></div>
+        </div>
+        <div class="card" id="email-settings-form">
+          <div class="toggle-row">
+            <div><div class="toggle-label">Enable weekly summary email</div><div class="toggle-sub">Receive a recap every week with your stats, streak and badges</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="email-toggle" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="email-prefs-grid" style="margin-top:18px">
+            <div class="field"><label>Send on</label>
+              <select class="form-select" id="email-day">
+                <option value="monday">Monday</option>
+                <option value="sunday" selected>Sunday</option>
+                <option value="friday">Friday</option>
+              </select>
+            </div>
+            <div class="field"><label>Send to email</label><input class="form-input" id="email-addr" type="email" placeholder="your@email.com"></div>
+          </div>
+          <button class="btn btn-primary" id="save-email-prefs" style="margin-top:4px">Save preferences</button>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <div class="card-title">📧 What the email includes</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="font-size:20px">🔥</span><span>Your current streak and whether you hit your goal</span></div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="font-size:20px">📊</span><span>Total activities completed that week</span></div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="font-size:20px">🏅</span><span>Any new badges or milestones you earned</span></div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="font-size:20px">📈</span><span>How you compared to the previous week</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ PROFILE ═════════════════════════════════════ -->
+      <section id="sec-profile" class="section hidden">
+        <div class="section-header"><div><h1 class="section-title">Profile</h1></div></div>
+
+        <div class="profile-hero">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar-lg">
+              <img id="profile-avatar-img" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%">
+              <span id="profile-avatar-text">?</span>
+            </div>
+            <div class="avatar-upload-btn" id="avatar-upload-btn" title="Change photo">📷</div>
+            <input type="file" id="avatar-file-input" accept="image/*">
+          </div>
+          <div class="profile-info">
+            <h2 id="profile-name">—</h2>
+            <p id="profile-email" style="color:var(--t2)">—</p>
+            <div class="profile-chips">
+              <div class="p-chip">🔐 Email / Password</div>
+              <div class="p-chip">🔒 Secured via Supabase Auth</div>
+            </div>
+            <div class="profile-stats">
+              <div><div class="ps-num" id="pf-total">0</div><div class="ps-label">Completed</div></div>
+              <div><div class="ps-num" id="pf-streak" style="color:var(--amber)">0</div><div class="ps-label">Best streak</div></div>
+              <div><div class="ps-num" id="pf-badges" style="color:var(--green)">0</div><div class="ps-label">Badges</div></div>
+              <div><div class="ps-num" id="pf-activities" style="color:var(--p-light)">0</div><div class="ps-label">Activities</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="card-title" style="margin-bottom:0">🔒 Change Password</div>
+            <button class="btn btn-ghost btn-sm" id="show-pw-btn">Change</button>
+          </div>
+          <div class="pw-form" id="pw-form" style="display:none;margin-top:16px">
+            <div class="pw-form-grid" style="grid-template-columns:1fr;gap:14px">
+              <div class="field"><label>Current password</label><input class="form-input" id="pw-old" type="password" placeholder="Enter your current password"></div>
+              <div class="field"><label>New password</label><input class="form-input" id="pw-new" type="password" placeholder="Min. 6 characters"></div>
+              <div class="field"><label>Confirm new password</label><input class="form-input" id="pw-conf" type="password" placeholder="Repeat new password"></div>
+            </div>
+            <div class="pw-form-btns">
+              <button class="btn btn-primary" id="save-pw-btn">Update password</button>
+              <button class="btn btn-ghost"   id="cancel-pw-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">ℹ️ About your account</div>
+          <p style="font-size:14px;color:var(--t2);line-height:1.75">
+            Your credentials are managed by <strong style="color:var(--t1)">Supabase Auth</strong> — passwords are hashed with bcrypt and never stored in plain text. Activity data is protected by row-level security so only your account can access it.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div id="toast"><span class="toast-icon" id="toast-icon">✓</span><span id="toast-msg"></span></div>
+<div id="ach-popup">
+  <div class="ach-eyebrow">🎉 Achievement unlocked!</div>
+  <div class="ach-body">
+    <div class="ach-emoji" id="ach-emoji">🏅</div>
+    <div><div class="ach-title" id="ach-title">—</div><div class="ach-desc" id="ach-desc">—</div></div>
+  </div>
+</div>
+
+<script type="module">
+  import { applyTheme, toggleTheme } from '../js/theme.js';
+  import { boot, showSection, setPeriod, initForms, initNoteModal, renderSocial, renderEmailSettings } from '../js/dashboard.js';
+
+  applyTheme();
+  window.showSection = showSection;
+  window.setPeriod   = setPeriod;
+
+  document.getElementById('dash-theme-btn')?.addEventListener('click', toggleTheme);
+
+  await boot();
+  initForms();
+  initNoteModal();
+  window.renderSocial        = renderSocial;
+  window.renderEmailSettings = renderEmailSettings;
+</script>
+<!-- Note Modal -->
+<div id="note-modal">
+  <div class="note-modal-box">
+    <div class="note-modal-title">📝 Add a note</div>
+    <div class="note-modal-sub">How did it go? Any personal bests or how you felt?</div>
+    <textarea id="note-input" placeholder="Great session today, felt strong…"></textarea>
+    <div class="note-modal-btns">
+      <button class="btn btn-primary" id="note-save-btn">Save &amp; mark done</button>
+      <button class="btn btn-ghost"   id="note-cancel-btn">Skip</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

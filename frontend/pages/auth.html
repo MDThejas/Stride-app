@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRIDE — Sign In</title>
+  <link rel="stylesheet" href="../styles/global.css">
+  <link rel="stylesheet" href="../styles/auth.css">
+</head>
+<body>
+<div class="auth-page">
+
+  <!-- ══ LEFT PANEL ══════════════════════════════════════ -->
+  <div class="auth-left">
+    <div class="auth-orb auth-orb-1"></div>
+    <div class="auth-orb auth-orb-2"></div>
+
+    <div class="auth-brand">
+      <div class="stride-logo">
+        <div class="logo-mark">S</div>
+        <span class="logo-text">STR<span class="logo-accent">I</span>DE</span>
+      </div>
+    </div>
+
+    <div class="auth-copy">
+      <h2>Your habits.<br>Your <em>progress</em>.</h2>
+      <p>Track every activity, celebrate every streak, and build the consistency that actually sticks.</p>
+    </div>
+
+    <div class="auth-perks">
+      <div class="auth-perk"><div class="perk-check">✓</div>Free forever — no credit card needed</div>
+      <div class="auth-perk"><div class="perk-check">✓</div>Tick off activities as you complete them</div>
+      <div class="auth-perk"><div class="perk-check">✓</div>Streaks, badges & detailed analytics</div>
+      <div class="auth-perk"><div class="perk-check">✓</div>Progress tracking with period comparison</div>
+    </div>
+
+    <!-- Floating preview card -->
+    <div class="auth-preview">
+      <div class="prev-title">Today's plan</div>
+      <div class="prev-row">
+        <div class="prev-icon">🏃</div>
+        <div class="prev-info"><div class="pn">Morning run</div><div class="pm">30 min · Medium</div></div>
+        <div class="prev-tick done">✓</div>
+      </div>
+      <div class="prev-sep"></div>
+      <div class="prev-row">
+        <div class="prev-icon">💪</div>
+        <div class="prev-info"><div class="pn">Gym session</div><div class="pm">45 min · High</div></div>
+        <div class="prev-tick done">✓</div>
+      </div>
+      <div class="prev-sep"></div>
+      <div class="prev-row">
+        <div class="prev-icon">🧘</div>
+        <div class="prev-info"><div class="pn">Evening yoga</div><div class="pm">20 min · Low</div></div>
+        <div class="prev-tick pend"></div>
+      </div>
+      <div class="prev-sep"></div>
+      <div class="prev-streak">🔥 <span>7 day streak</span></div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT PANEL ══════════════════════════════════════ -->
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+
+      <!-- Back link + theme toggle row -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:36px">
+        <a href="../index.html" style="display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--t3);transition:color .15s" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t3)'">← Back to home</a>
+        <button class="theme-toggle" id="theme-btn" title="Toggle theme">☀️</button>
+      </div>
+
+      <div class="auth-header">
+        <h1 class="auth-title" id="auth-form-title">Welcome back</h1>
+        <p class="auth-sub"   id="auth-form-sub">Log in to your STRIDE account</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login"  onclick="switchTab('login')">Log in</button>
+        <button class="auth-tab"        data-tab="signup" onclick="switchTab('signup')">Sign up</button>
+      </div>
+
+      <div id="auth-error" class="auth-error"></div>
+
+      <!-- LOGIN -->
+      <div id="form-login">
+        <div class="auth-fields">
+          <div class="field">
+            <label>Email address</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉</span>
+              <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+            </div>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="login-pass" placeholder="Your password"
+                     autocomplete="current-password"
+                     onkeydown="if(event.key==='Enter') doLogin()">
+            </div>
+          </div>
+        </div>
+        <button class="auth-btn" id="login-btn" data-label="Log in →" onclick="doLogin()">Log in →</button>
+      </div>
+
+      <!-- SIGNUP -->
+      <div id="form-signup" class="hidden">
+        <div class="auth-fields">
+          <div class="field">
+            <label>Your name</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="signup-name" placeholder="First name" autocomplete="name">
+            </div>
+          </div>
+          <div class="field">
+            <label>Email address</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉</span>
+              <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email">
+            </div>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="signup-pass" placeholder="Min. 6 characters"
+                     autocomplete="new-password"
+                     onkeydown="if(event.key==='Enter') doSignup()">
+            </div>
+          </div>
+        </div>
+        <button class="auth-btn" id="signup-btn" data-label="Create account →" onclick="doSignup()">Create account →</button>
+      </div>
+
+      <div class="or-sep">or</div>
+      
+      <p class="auth-footer">By signing up you agree to our <a href="#">Terms</a> and <a href="#">Privacy</a>.</p>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast"><span class="toast-icon" id="toast-icon">✓</span><span id="toast-msg"></span></div>
+
+<script type="module">
+  import { applyTheme, toggleTheme } from '../js/theme.js';
+  import { switchTab, doLogin, doSignup, redirectIfLoggedIn } from '../js/auth.js';
+
+  applyTheme();
+
+  window.switchTab  = switchTab;
+  window.doLogin    = doLogin;
+  window.doSignup   = doSignup;
+
+  document.getElementById('theme-btn')?.addEventListener('click', toggleTheme);
+
+  await redirectIfLoggedIn();
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('tab') === 'signup') switchTab('signup');
+</script>
+</body>
+</html>
