@@ -38,4 +38,21 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`STRIDE backend running on http://localhost:${PORT}`);
+
+  // Start weekly email scheduler
+  if (process.env.RESEND_API_KEY) {
+    const { startScheduler } = require('./services/weeklyEmail');
+    startScheduler();
+  } else {
+    console.log('⚠️  RESEND_API_KEY not set — weekly emails disabled');
+  }
+});
+
+// ── Test email route (remove in production) ───────────────
+app.post('/api/test-email', async (req, res) => {
+  if (!process.env.RESEND_API_KEY) return res.status(400).json({ error: 'RESEND_API_KEY not set' });
+  const { sendTestEmail } = require('./services/weeklyEmail');
+  const { userId, authEmail, summaryEmail } = req.body;
+  await sendTestEmail(userId, authEmail, summaryEmail);
+  res.json({ success: true, message: `Test email sent to ${summaryEmail || authEmail}` });
 });
