@@ -149,7 +149,9 @@ window.__tick = async (actId, isDone) => {
       S.streak = newStreak;
       if (newStreak > S.bestStreak) S.bestStreak = newStreak;
       await saveStreak(S.user.id, S.streak, S.bestStreak);
-      const newBadges = await checkAndUnlock(S.user.id, S.activities, S.streak, S.unlockedBadges);
+      // Pass all completions (flat array) and activity templates for variety/duration checks
+      const allCompletions = Object.values(S.completionsByDate).flat().filter(c => c.completed);
+      const newBadges = await checkAndUnlock(S.user.id, allCompletions, S.streak, S.unlockedBadges, S.activities);
       S.unlockedBadges = [...S.unlockedBadges, ...newBadges.map(b => b.id)];
       newBadges.forEach(showAchPopup);
     }
@@ -289,12 +291,19 @@ function renderPieChart2() {
 function renderWeekTracker() {
   const container = document.getElementById('week-tracker'); if (!container) return;
   const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const dayNums = [1,2,3,4,5,6,0]; // Mon=1...Sun=0
 
-  // Build last 7 days dates
+  // Build Mon–Sun of the CURRENT week
+  const today = new Date();
+  const currentDay = today.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  // Find this week's Monday
+  const monday = new Date(today);
+  const diffToMon = (currentDay === 0) ? -6 : 1 - currentDay;
+  monday.setDate(today.getDate() + diffToMon);
+
   const dates = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
     dates.push(d.toISOString().split('T')[0]);
   }
 
@@ -531,8 +540,9 @@ function renderAchievements() {
     return `<div class="badge-card ${u?'unlocked':'locked'}" title="${b.desc}"><span class="badge-emoji">${b.emoji}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;
   }).join('');
   const ml = document.getElementById('milestones-list');
+  const allC = Object.values(S.completionsByDate).flat().filter(c => c.completed);
   if (ml) ml.innerHTML = MILESTONES.map(m => {
-    const e = m.done(S.activities, S.streak);
+    const e = m.done(allC, S.streak);
     return `<div class="milestone-row ${e?'':'locked'}"><div class="ms-icon">${m.emoji}</div><div class="ms-info"><div class="ms-name">${m.label}</div><div class="ms-desc">${m.desc}</div></div><div class="ms-status ${e?'earned':'locked'}">${e?'Earned ✓':'Locked'}</div></div>`;
   }).join('');
 }
@@ -800,7 +810,9 @@ async function saveNote() {
         S.streak = newStreak;
         if (newStreak > S.bestStreak) S.bestStreak = newStreak;
         await saveStreak(S.user.id, S.streak, S.bestStreak);
-        const newBadges = await checkAndUnlock(S.user.id, S.activities, S.streak, S.unlockedBadges);
+        // Pass all completions (flat array) and activity templates for variety/duration checks
+      const allCompletions = Object.values(S.completionsByDate).flat().filter(c => c.completed);
+      const newBadges = await checkAndUnlock(S.user.id, allCompletions, S.streak, S.unlockedBadges, S.activities);
         S.unlockedBadges = [...S.unlockedBadges, ...newBadges.map(b => b.id)];
         newBadges.forEach(showAchPopup);
       }
