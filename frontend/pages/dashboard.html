@@ -9,6 +9,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
+<!-- Mobile menu button -->
+<button class="mobile-menu-btn" id="mobile-menu-btn" title="Menu">☰</button>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
 <div class="app-shell">
 
   <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
@@ -458,6 +462,24 @@
   initNoteModal();
   window.renderSocial        = renderSocial;
   window.renderEmailSettings = renderEmailSettings;
+
+  // ── Mobile sidebar toggle ──────────────────────────────
+  const menuBtn  = document.getElementById('mobile-menu-btn');
+  const overlay  = document.getElementById('sidebar-overlay');
+  const sidebar  = document.querySelector('.sidebar');
+
+  function openSidebar()  { sidebar.classList.add('open');  overlay.classList.add('open');  }
+  function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+
+  menuBtn?.addEventListener('click', openSidebar);
+  overlay?.addEventListener('click', closeSidebar);
+
+  // Close sidebar when a nav item is clicked on mobile
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeSidebar();
+    });
+  });
 </script>
 <!-- Note Modal -->
 <div id="note-modal">

@@ -10,7 +10,7 @@ import {
   toggleCompletion, getActivitiesForDate, isDayComplete,
   computeStreak, groupCompletionsByDate, countByType
 } from './activities.js';
-import { fetchGoals, createGoal, incrementGoal, markGoalDone, deleteGoal } from './goals.js';
+import { fetchGoals, fetchGoalProgress, createGoal, incrementGoal, markGoalDone, deleteGoal, getPeriodKey } from './goals.js';
 import { BADGES, MILESTONES, getUnlockedBadges, checkAndUnlock, saveStreak } from './achievements.js';
 import { getFriends, getPendingRequests, sendFriendRequest, acceptFriendRequest, removeFriend } from './friends.js';
 
@@ -19,6 +19,7 @@ let barChartInst = null, pieChartInst = null, progChartInst = null;
 
 const S = {
   user: null, activities: [], goals: [],
+  goalProgress: {},
   unlockedBadges: [], streak: 0, bestStreak: 0,
   todayCompletions: [], completionsByDate: {},
   editingId: null, currentPeriod: 'week',
@@ -42,6 +43,7 @@ export async function boot() {
   ]);
 
   S.activities = activities; S.goals = goals;
+  S.goalProgress = await fetchGoalProgress(goals);
   S.unlockedBadges = profileData.unlockedBadges;
   S.bestStreak = profileData.bestStreak;
   S.todayCompletions = todayC;
@@ -145,13 +147,13 @@ window.__tick = async (actId, isDone) => {
     }
     S.completionsByDate[TODAY] = S.todayCompletions;
     const newStreak = computeStreak(S.activities, S.completionsByDate);
-    if (newStreak !== S.streak) {
-      S.streak = newStreak;
-      if (newStreak > S.bestStreak) S.bestStreak = newStreak;
-      await saveStreak(S.user.id, S.streak, S.bestStreak);
-      // Pass all completions (flat array) and activity templates for variety/duration checks
-      const allCompletions = Object.values(S.completionsByDate).flat().filter(c => c.completed);
-      const newBadges = await checkAndUnlock(S.user.id, allCompletions, S.streak, S.unlockedBadges, S.activities);
+    S.streak = newStreak;
+    if (newStreak > S.bestStreak) S.bestStreak = newStreak;
+    await saveStreak(S.user.id, S.streak, S.bestStreak);
+    // Check badges on EVERY tick (not just streak changes)
+    const allCompletions = Object.values(S.completionsByDate).flat().filter(c => c.completed);
+    const newBadges = await checkAndUnlock(S.user.id, allCompletions, S.streak, S.unlockedBadges, S.activities);
+    if (newBadges.length > 0) {
       S.unlockedBadges = [...S.unlockedBadges, ...newBadges.map(b => b.id)];
       newBadges.forEach(showAchPopup);
     }

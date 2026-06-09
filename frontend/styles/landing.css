@@ -142,3 +142,24 @@
 [data-theme="light"] .landing-footer { color: var(--t3); border-color: var(--border); }
 [data-theme="light"] .strip-item + .strip-item::before { background: var(--border); }
 [data-theme="light"] .steps::before { opacity: 0.15; }
+
+/* ── MOBILE ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .landing-nav { padding: 14px 20px; }
+  .nav-links   { display: none; }
+  .nav-cta     { gap: 6px; }
+  .hero        { padding: 60px 20px 48px; }
+  .hero-title  { font-size: clamp(36px, 12vw, 64px); }
+  .hero-sub    { font-size: 15px; }
+  .hero-btns   { flex-direction: column; align-items: center; }
+  .hero-btns .btn { width: 100%; max-width: 280px; justify-content: center; }
+  .social-strip { margin: 16px 20px 0; padding: 0; flex-wrap: wrap; }
+  .strip-item  { padding: 20px 14px; flex: 1 1 40%; }
+  .features-section { padding: 48px 20px; }
+  .feat-grid   { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .how-section { padding: 48px 20px; }
+  .steps-row   { flex-direction: column; gap: 24px; }
+  .steps-row::before { display: none; }
+  .cta         { margin: 0 16px 48px; padding: 40px 20px; }
+  .landing-footer { padding: 20px; }
+}

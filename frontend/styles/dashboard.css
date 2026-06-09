@@ -502,3 +502,129 @@
 [data-theme="light"] .note-modal-box { background:var(--bg-card); }
 [data-theme="light"] #note-input     { background:var(--bg-3); color:var(--t1); }
 [data-theme="light"] .friend-avatar  { box-shadow:none; }
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — Full phone support
+══════════════════════════════════════════════════════════ */
+
+/* ── Mobile hamburger menu button ─────────────────────────── */
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 300;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r2);
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 199;
+  backdrop-filter: blur(2px);
+}
+
+@media (max-width: 768px) {
+  /* Show hamburger */
+  .mobile-menu-btn { display: flex; }
+
+  /* Sidebar hidden by default on mobile */
+  .sidebar {
+    width: 260px;
+    transform: translateX(-100%);
+    transition: transform .25s var(--e);
+    box-shadow: var(--shadow-lg);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+
+  /* Main takes full width */
+  .main { margin-left: 0; }
+  .main-inner { padding: 64px 16px 24px; }
+
+  /* Section header stacks */
+  .section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .section-title  { font-size: 20px; }
+
+  /* Today hero stacks */
+  .today-hero {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 18px;
+  }
+  .today-ring-wrap { display: none; } /* hide ring on mobile, bar is enough */
+
+  /* Stat cards 2 col */
+  .stat-cards-row { grid-template-columns: 1fr 1fr; }
+  .stat-value     { font-size: 24px; }
+
+  /* Grid always 1 col on mobile */
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+
+  /* Week tracker horizontal scroll */
+  .week-tracker {
+    grid-template-columns: repeat(7, minmax(100px, 1fr));
+    overflow-x: auto;
+    padding-bottom: 8px;
+    gap: 8px;
+  }
+  .week-act-cell { min-height: 60px; }
+
+  /* Activity rows */
+  .today-row { padding: 12px 12px; gap: 10px; }
+  .today-act-name { font-size: 13px; }
+  .today-act-meta { font-size: 11px; }
+
+  /* Manage cards stack actions */
+  .manage-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .manage-card-actions { width: 100%; display: flex; gap: 8px; }
+  .action-btn { flex: 1; text-align: center; }
+
+  /* Badges grid 2 col */
+  .badges-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Profile hero stacks */
+  .profile-hero { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .profile-stats { gap: 16px; }
+
+  /* Goals form */
+  .goal-form-grid    { grid-template-columns: 1fr; }
+  .af-grid           { grid-template-columns: 1fr; }
+  .af-type-row       { gap: 6px; }
+  .af-pill           { padding: 6px 12px; font-size: 12px; }
+
+  /* Progress KPIs */
+  .progress-kpi-row  { grid-template-columns: 1fr; }
+
+  /* Friends */
+  .add-friend-row    { flex-direction: column; }
+  .friend-row        { flex-wrap: wrap; }
+  .friend-actions    { width: 100%; }
+
+  /* Note modal */
+  .note-modal-box    { margin: 16px; padding: 20px; }
+
+  /* Sidebar user */
+  .sidebar-bottom    { padding: 10px 8px; }
+
+  /* Chart wrap smaller on mobile */
+  .chart-wrap        { height: 170px; }
+
+  /* Password form */
+  .pw-form-grid      { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 400px) {
+  .stat-cards-row    { grid-template-columns: 1fr; }
+  .badges-grid       { grid-template-columns: repeat(2, 1fr); }
+  .today-chip        { font-size: 11px; padding: 4px 10px; }
+}
