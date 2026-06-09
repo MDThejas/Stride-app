@@ -8,9 +8,10 @@ import {
   fetchActivities, createActivity, updateActivity, deleteActivity,
   fetchCompletionsForDate, fetchCompletionsRange,
   toggleCompletion, getActivitiesForDate, isDayComplete,
-  computeStreak, groupCompletionsByDate, countByType
+  computeStreak, groupCompletionsByDate, countByType,
+  toggleCompletionWithNote, updateCompletionNote
 } from './activities.js';
-import { fetchGoals, fetchGoalProgress, createGoal, incrementGoal, markGoalDone, deleteGoal, getPeriodKey } from './goals.js';
+import { fetchGoals, createGoal, incrementGoal, markGoalDone, deleteGoal } from './goals.js';
 import { BADGES, MILESTONES, getUnlockedBadges, checkAndUnlock, saveStreak } from './achievements.js';
 import { getFriends, getPendingRequests, sendFriendRequest, acceptFriendRequest, removeFriend } from './friends.js';
 
@@ -802,7 +803,6 @@ async function saveNote() {
   if (!noteDone) {
     // Tick off with note
     try {
-      const { toggleCompletionWithNote } = await import('./activities.js');
       await toggleCompletionWithNote(noteActivityId, TODAY, false, note);
       if (!S.todayCompletions.find(c => c.activity_id === noteActivityId))
         S.todayCompletions.push({ activity_id: noteActivityId, date: TODAY, completed: true, note });
@@ -825,7 +825,6 @@ async function saveNote() {
   } else {
     // Just update the note
     try {
-      const { updateCompletionNote } = await import('./activities.js');
       await updateCompletionNote(noteActivityId, TODAY, note);
       const c = S.todayCompletions.find(c => c.activity_id === noteActivityId);
       if (c) c.note = note;
