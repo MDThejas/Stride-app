@@ -464,22 +464,42 @@
   window.renderEmailSettings = renderEmailSettings;
 
   // ── Mobile sidebar toggle ──────────────────────────────
-  const menuBtn  = document.getElementById('mobile-menu-btn');
-  const overlay  = document.getElementById('sidebar-overlay');
-  const sidebar  = document.querySelector('.sidebar');
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const overlay = document.getElementById('sidebar-overlay');
+  const sidebar = document.querySelector('.sidebar');
 
-  function openSidebar()  { sidebar.classList.add('open');  overlay.classList.add('open');  }
-  function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+  function openSidebar() {
+    if (sidebar) sidebar.classList.add('open');
+    if (overlay) overlay.classList.add('open');
+    if (menuBtn) menuBtn.textContent = '✕';
+  }
+  function closeSidebar() {
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    if (menuBtn) menuBtn.textContent = '☰';
+  }
+  function toggleSidebar() {
+    if (sidebar && sidebar.classList.contains('open')) closeSidebar();
+    else openSidebar();
+  }
 
-  menuBtn?.addEventListener('click', openSidebar);
-  overlay?.addEventListener('click', closeSidebar);
+  if (menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+  if (overlay) overlay.addEventListener('click', closeSidebar);
 
-  // Close sidebar when a nav item is clicked on mobile
+  // Close sidebar on nav click (mobile)
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => {
       if (window.innerWidth <= 768) closeSidebar();
     });
   });
+
+  // Show/hide menu btn based on screen size
+  function checkMobile() {
+    if (menuBtn) menuBtn.style.display = window.innerWidth <= 768 ? 'flex' : 'none';
+    if (window.innerWidth > 768) closeSidebar();
+  }
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
 </script>
 <!-- Note Modal -->
 <div id="note-modal">

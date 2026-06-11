@@ -361,23 +361,59 @@ function renderWeekTracker() {
     const completions = S.completionsByDate[date] || [];
     const doneIds = new Set(completions.filter(c => c.completed).map(c => c.activity_id));
 
-    const cells = dayActs.slice(0, 5).map(a => {
+    const SHOW = 3;
+    const visibleActs = dayActs.slice(0, SHOW);
+    const hiddenActs  = dayActs.slice(SHOW);
+    const doneCount   = dayActs.filter(a => doneIds.has(a.id)).length;
+
+    const cells = visibleActs.map(a => {
       const done = doneIds.has(a.id);
-      return `<div class="week-act-cell ${done ? 'completed' : 'pending'}" title="${a.name} — ${done ? 'Done ✓' : 'Pending'}">
+      return `<div class="week-act-cell ${done ? 'completed' : 'pending'}" title="${a.name} — ${a.duration}min — ${done ? 'Done ✓' : 'Pending'}">
         <div class="week-act-name">${a.name}</div>
         <div class="week-act-meta">${a.duration}min</div>
-        ${done ? '<div class="week-act-check">✓ Done</div>' : ''}
+        ${done ? '<div class="week-act-check">✓</div>' : ''}
       </div>`;
     }).join('');
 
+    const moreBtn = hiddenActs.length > 0
+      ? `<button class="week-more-btn" onclick="window.__expandDay(this, '${date}')" data-date="${date}" data-expanded="false">
+          +${hiddenActs.length} more
+        </button>`
+      : '';
+
+    const hiddenCells = hiddenActs.map(a => {
+      const done = doneIds.has(a.id);
+      return `<div class="week-act-cell ${done ? 'completed' : 'pending'} week-hidden" style="display:none" title="${a.name} — ${done ? 'Done ✓' : 'Pending'}">
+        <div class="week-act-name">${a.name}</div>
+        <div class="week-act-meta">${a.duration}min</div>
+        ${done ? '<div class="week-act-check">✓</div>' : ''}
+      </div>`;
+    }).join('');
+
+    const summary = dayActs.length > 0
+      ? `<div class="week-day-summary">${doneCount}/${dayActs.length}</div>`
+      : '';
+
     return `
       <div class="week-day-col">
-        <div class="week-day-label" style="${isToday ? 'color:var(--p-light)' : ''}">${day}${isToday ? ' •' : ''}</div>
-        ${cells || `<div class="week-act-cell no-activity"><div class="week-act-name" style="text-align:center;color:var(--t3)">—</div></div>`}
-        ${dayActs.length > 5 ? `<div style="font-size:10px;color:var(--t3);text-align:center">+${dayActs.length-5}</div>` : ''}
+        <div class="week-day-label" style="${isToday ? 'color:var(--p-light);font-weight:700' : ''}">${day}${isToday ? ' ●' : ''}</div>
+        ${summary}
+        ${cells || `<div class="week-act-cell no-activity" style="text-align:center;color:var(--t3);font-size:12px;padding:12px 8px">—</div>`}
+        ${hiddenCells}
+        ${moreBtn}
       </div>`;
   }).join('');
 }
+
+// Expand/collapse hidden activities in week tracker
+window.__expandDay = (btn, date) => {
+  const col      = btn.closest('.week-day-col');
+  const hidden   = col.querySelectorAll('.week-hidden');
+  const expanded = btn.dataset.expanded === 'true';
+  hidden.forEach(el => el.style.display = expanded ? 'none' : 'flex');
+  btn.dataset.expanded = (!expanded).toString();
+  btn.textContent      = expanded ? `+${hidden.length} more` : 'Show less';
+};
 
 export function setPeriod(days, btn) {
   document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
