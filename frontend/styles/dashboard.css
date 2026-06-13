@@ -535,19 +535,25 @@
 [data-theme="light"] #note-input     { background:var(--bg-3); color:var(--t1); }
 [data-theme="light"] .friend-avatar  { box-shadow:none; }
 
+
+  .progress-kpi-row { grid-template-columns: 1fr; }
+  .main-inner       { padding: 58px 12px 28px; }
+  .today-chip       { font-size: 11px; padding: 4px 10px; }
+  .section-title    { font-size: 17px; }
+
 /* ══════════════════════════════════════════════════════════
-   MOBILE RESPONSIVE
+   MOBILE RESPONSIVE — Complete fix
 ══════════════════════════════════════════════════════════ */
 
-/* Hamburger button — hidden on desktop, shown on mobile */
+/* Hamburger button */
 .mobile-menu-btn {
   display: none;
   position: fixed;
   top: 12px;
   left: 12px;
-  z-index: 300;
-  width: 42px;
-  height: 42px;
+  z-index: 9999;
+  width: 44px;
+  height: 44px;
   border-radius: var(--r2);
   background: var(--bg-card);
   border: 1px solid var(--border-2);
@@ -556,18 +562,18 @@
   cursor: pointer;
   font-size: 20px;
   box-shadow: var(--shadow-md);
-  transition: all .2s var(--e);
   color: var(--t1);
+  transition: all .2s;
 }
-.mobile-menu-btn:hover { background: var(--bg-raised); border-color: var(--p); }
+.mobile-menu-btn:hover { background: var(--bg-raised); }
 
-/* Overlay behind sidebar */
+/* Overlay */
 .sidebar-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.55);
-  z-index: 199;
+  background: rgba(0,0,0,.6);
+  z-index: 998;
   backdrop-filter: blur(3px);
 }
 .sidebar-overlay.open { display: block; }
@@ -576,116 +582,146 @@
   /* Show hamburger */
   .mobile-menu-btn { display: flex; }
 
-  /* Sidebar slides in from left */
+  /* SIDEBAR — full visible when open */
   .sidebar {
-    width: 270px;
-    transform: translateX(-100%);
-    transition: transform .28s var(--e);
-    box-shadow: var(--shadow-lg);
-    z-index: 200;
+    position: fixed;
+    top: 0; left: 0;
+    width: 75vw;
+    max-width: 280px;
+    height: 100vh;
+    z-index: 9999;
+    transform: translateX(-110%);
+    transition: transform .28s ease;
+    overflow-y: auto;
+    background: var(--bg-2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
   }
-  .sidebar.open { transform: translateX(0); }
+  .sidebar.open {
+    transform: translateX(0) !important;
+  }
 
-  /* Main full width */
-  .main        { margin-left: 0 !important; }
-  .main-inner  { padding: 60px 14px 32px; }
+  /* Sidebar content must be visible */
+  .sidebar-logo,
+  .sidebar-streak,
+  .sidebar-section-label,
+  .sidebar-nav,
+  .sidebar-bottom,
+  .nav-item,
+  .ss-num,
+  .ss-label,
+  .ss-fire,
+  .user-avatar,
+  .user-meta,
+  .logout-btn,
+  .theme-toggle {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex;
+  }
+  .sidebar-nav   { display: block; }
+  .sidebar-logo  { display: flex; }
+  .sidebar-bottom { display: flex; flex-direction: column; }
+
+  /* Main content */
+  .main        { margin-left: 0 !important; width: 100%; }
+  .main-inner  { padding: 64px 14px 32px; }
 
   /* Section header */
-  .section-header { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
-  .section-title  { font-size: 19px; }
-  .section-sub    { font-size: 13px; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+  .section-title  { font-size: 20px; }
 
-  /* Today hero card */
-  .today-hero    { display: block; padding: 18px 16px; }
+  /* Today hero */
+  .today-hero {
+    display: block;
+    padding: 18px 16px;
+    position: relative;
+  }
   .today-ring-wrap { display: none; }
-  .today-date    { font-size: 16px; }
-  .today-chips   { margin-top: 8px; }
+  .today-date  { font-size: 17px; margin-bottom: 4px; }
 
   /* Activity rows */
-  .today-row     { padding: 11px 12px; gap: 10px; flex-wrap: nowrap; }
+  .today-row { padding: 12px; gap: 10px; }
   .today-act-name { font-size: 13px; }
-  .today-act-meta { font-size: 11px; flex-wrap: wrap; }
-  .act-status    { font-size: 10px; padding: 3px 8px; }
-  .note-btn      { font-size: 12px; padding: 3px 6px; }
+  .today-act-meta { font-size: 11px; flex-wrap: wrap; gap: 4px; }
+  .act-status { font-size: 10px; padding: 3px 8px; flex-shrink: 0; }
+  .note-btn   { font-size: 12px; padding: 3px 6px; flex-shrink: 0; }
 
-  /* Stat cards 2 col */
-  .stat-cards-row { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .stat-value     { font-size: 22px; }
-  .stat-label     { font-size: 10px; }
-
-  /* All grids → 1 col */
-  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 14px; }
-
-  /* Week tracker horizontal scroll */
-  .week-tracker {
-    grid-template-columns: repeat(7, minmax(100px, 1fr));
-    overflow-x: auto;
-    padding-bottom: 10px;
-    gap: 8px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+  /* Stats strip - fix cut off */
+  .stat-cards-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
-  .week-day-col  { min-width: 100px; }
-  .week-act-cell { min-height: 50px; padding: 7px 8px; }
+  .stat-value { font-size: 22px; }
+  .stat-label { font-size: 10px; }
+  .stat-card  { padding: 14px 12px; }
+
+  /* All grids 1 col */
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 12px; }
+
+  /* Week tracker scroll */
+  .week-tracker {
+    grid-template-columns: repeat(7, minmax(95px, 1fr));
+    overflow-x: auto;
+    padding-bottom: 8px;
+    gap: 7px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .week-day-col  { min-width: 95px; }
+  .week-act-cell { min-height: 48px; padding: 7px 8px; }
   .week-act-name { font-size: 11px; }
 
   /* Manage cards */
-  .manage-card   { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; }
-  .manage-actions{ width: 100%; display: flex; gap: 8px; }
-  .action-btn    { flex: 1; text-align: center; font-size: 12px; padding: 6px 10px; }
+  .manage-card { flex-direction: column; gap: 10px; padding: 14px; }
+  .manage-actions { width: 100%; }
+  .action-btn { flex: 1; text-align: center; font-size: 12px; }
 
   /* Forms */
   .af-grid          { grid-template-columns: 1fr; }
   .af-grid .full    { grid-column: 1; }
   .af-type-row      { gap: 6px; }
-  .af-pill          { padding: 6px 11px; font-size: 12px; }
+  .af-pill          { padding: 6px 10px; font-size: 12px; }
   .goal-form-grid   { grid-template-columns: 1fr; }
-  .goal-form-btns   { flex-direction: column; }
-  .goal-form-btns .btn { width: 100%; }
   .pw-form-grid     { grid-template-columns: 1fr; }
 
   /* Progress KPIs */
-  .progress-kpi-row { grid-template-columns: 1fr 1fr; }
+  .progress-kpi-row { grid-template-columns: 1fr 1fr; gap: 10px; }
   .kpi-val          { font-size: 22px; }
 
   /* Badges */
   .badges-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
   /* Profile */
-  .profile-hero   { flex-direction: column; padding: 20px; gap: 16px; }
-  .profile-stats  { gap: 16px; flex-wrap: wrap; }
-  .ps-num         { font-size: 20px; }
+  .profile-hero  { flex-direction: column; padding: 18px; gap: 14px; }
+  .profile-stats { gap: 16px; flex-wrap: wrap; }
 
   /* Friends */
   .add-friend-row { flex-direction: column; gap: 10px; }
-  .add-friend-row input { width: 100%; }
-  .add-friend-row button { width: 100%; }
-  .friend-row     { flex-wrap: wrap; gap: 10px; }
+  .add-friend-row input, .add-friend-row button { width: 100%; }
+  .friend-row { flex-wrap: wrap; gap: 10px; }
   .friend-actions { width: 100%; }
+
+  /* Charts */
+  .chart-wrap { height: 160px; }
+  .period-row { flex-wrap: wrap; gap: 8px; }
+
+  /* Email */
+  .email-prefs-grid { grid-template-columns: 1fr; }
+
+  /* Progress tabs */
+  .progress-period-tabs { gap: 4px; flex-wrap: wrap; }
+  .prog-tab { padding: 6px 12px; font-size: 12px; }
 
   /* Note modal */
   .note-modal-box { margin: 12px; padding: 20px; max-width: calc(100vw - 24px); }
   .note-modal-btns { flex-direction: column; }
-
-  /* Charts */
-  .chart-wrap    { height: 160px; }
-  .period-row    { flex-wrap: wrap; gap: 8px; }
-
-  /* Email prefs */
-  .email-prefs-grid { grid-template-columns: 1fr; }
-
-  /* Sidebar streak */
-  .sidebar-streak { margin: 8px 10px 4px; }
-
-  /* Progress period tabs */
-  .progress-period-tabs { gap: 4px; }
-  .prog-tab { padding: 6px 12px; font-size: 12px; }
 }
 
 @media (max-width: 420px) {
+  .main-inner       { padding: 60px 12px 28px; }
+  .section-title    { font-size: 18px; }
   .stat-cards-row   { grid-template-columns: 1fr 1fr; }
   .progress-kpi-row { grid-template-columns: 1fr; }
-  .main-inner       { padding: 58px 12px 28px; }
   .today-chip       { font-size: 11px; padding: 4px 10px; }
-  .section-title    { font-size: 17px; }
 }

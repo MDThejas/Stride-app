@@ -464,42 +464,56 @@
   window.renderEmailSettings = renderEmailSettings;
 
   // ── Mobile sidebar toggle ──────────────────────────────
-  const menuBtn = document.getElementById('mobile-menu-btn');
-  const overlay = document.getElementById('sidebar-overlay');
-  const sidebar = document.querySelector('.sidebar');
+  (function() {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const overlay = document.getElementById('sidebar-overlay');
+    const sidebar = document.querySelector('.sidebar');
+    if (!menuBtn || !sidebar) return;
 
-  function openSidebar() {
-    if (sidebar) sidebar.classList.add('open');
-    if (overlay) overlay.classList.add('open');
-    if (menuBtn) menuBtn.textContent = '✕';
-  }
-  function closeSidebar() {
-    if (sidebar) sidebar.classList.remove('open');
-    if (overlay) overlay.classList.remove('open');
-    if (menuBtn) menuBtn.textContent = '☰';
-  }
-  function toggleSidebar() {
-    if (sidebar && sidebar.classList.contains('open')) closeSidebar();
-    else openSidebar();
-  }
+    function isMobile() { return window.innerWidth <= 768; }
 
-  if (menuBtn) menuBtn.addEventListener('click', toggleSidebar);
-  if (overlay) overlay.addEventListener('click', closeSidebar);
+    function openSidebar() {
+      sidebar.classList.add('open');
+      if (overlay) overlay.classList.add('open');
+      menuBtn.textContent = '✕';
+      menuBtn.style.borderColor = 'var(--p)';
+      // ensure sidebar is fully visible
+      sidebar.style.visibility = 'visible';
+      sidebar.style.opacity    = '1';
+    }
 
-  // Close sidebar on nav click (mobile)
-  document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (window.innerWidth <= 768) closeSidebar();
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('open');
+      menuBtn.textContent = '☰';
+      menuBtn.style.borderColor = '';
+    }
+
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
     });
-  });
 
-  // Show/hide menu btn based on screen size
-  function checkMobile() {
-    if (menuBtn) menuBtn.style.display = window.innerWidth <= 768 ? 'flex' : 'none';
-    if (window.innerWidth > 768) closeSidebar();
-  }
-  checkMobile();
-  window.addEventListener('resize', checkMobile);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+
+    // Close on nav click (mobile)
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.addEventListener('click', () => { if (isMobile()) closeSidebar(); });
+    });
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      if (!isMobile()) {
+        closeSidebar();
+        menuBtn.style.display = 'none';
+      } else {
+        menuBtn.style.display = 'flex';
+      }
+    });
+
+    // Initial state
+    menuBtn.style.display = isMobile() ? 'flex' : 'none';
+  })();
 </script>
 <!-- Note Modal -->
 <div id="note-modal">

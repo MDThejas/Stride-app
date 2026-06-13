@@ -143,23 +143,64 @@
 [data-theme="light"] .strip-item + .strip-item::before { background: var(--border); }
 [data-theme="light"] .steps::before { opacity: 0.15; }
 
+
 /* ── MOBILE ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .landing-nav { padding: 14px 20px; }
-  .nav-links   { display: none; }
-  .nav-cta     { gap: 6px; }
-  .hero        { padding: 60px 20px 48px; }
-  .hero-title  { font-size: clamp(36px, 12vw, 64px); }
-  .hero-sub    { font-size: 15px; }
-  .hero-btns   { flex-direction: column; align-items: center; }
-  .hero-btns .btn { width: 100%; max-width: 280px; justify-content: center; }
-  .social-strip { margin: 16px 20px 0; padding: 0; flex-wrap: wrap; }
-  .strip-item  { padding: 20px 14px; flex: 1 1 40%; }
-  .features-section { padding: 48px 20px; }
-  .feat-grid   { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .how-section { padding: 48px 20px; }
-  .steps-row   { flex-direction: column; gap: 24px; }
+  .landing-nav  { padding: 14px 18px; }
+  .nav-links    { display: none; }
+  .nav-cta      { gap: 6px; }
+  .nav-cta .btn { padding: 7px 14px; font-size: 13px; }
+
+  .hero         { padding: 56px 18px 44px; }
+  .hero-title   { font-size: clamp(36px, 11vw, 60px); }
+  .hero-sub     { font-size: 15px; }
+  .hero-btns    { flex-direction: column; align-items: center; }
+  .hero-btns .btn { width: 100%; max-width: 300px; justify-content: center; }
+  .hero-note    { font-size: 12px; }
+
+  /* Stats strip — fix cutoff on mobile */
+  .strip {
+    margin: 14px 14px 0;
+    border-radius: var(--r3);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .strip-item {
+    padding: 22px 12px;
+    flex: none;
+    width: 100%;
+  }
+  .strip-item + .strip-item::before {
+    display: none;
+  }
+  /* Add borders between grid cells */
+  .strip-item:nth-child(1) { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+  .strip-item:nth-child(2) { border-bottom: 1px solid var(--border); }
+  .strip-item:nth-child(3) { border-right: 1px solid var(--border); }
+  .strip-num   { font-size: 28px; }
+  .strip-label { font-size: 12px; }
+
+  .features-section { padding: 44px 18px; }
+  .feat-grid    { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .feat-card    { padding: 18px 14px; }
+  .feat-card h3 { font-size: 14px; }
+  .feat-card p  { font-size: 13px; }
+
+  .how-section  { padding: 44px 18px; }
+  .steps-row    { flex-direction: column; gap: 24px; align-items: center; }
   .steps-row::before { display: none; }
-  .cta         { margin: 0 16px 48px; padding: 40px 20px; }
-  .landing-footer { padding: 20px; }
+  .step         { max-width: 260px; }
+
+  .cta          { margin: 0 14px 44px; padding: 36px 18px; }
+  .cta h2       { font-size: 22px; }
+  .cta p        { font-size: 14px; }
+
+  .landing-footer { padding: 20px 18px; font-size: 12px; }
+}
+
+@media (max-width: 420px) {
+  .hero-title   { font-size: clamp(30px, 10vw, 48px); }
+  .feat-grid    { grid-template-columns: 1fr; }
+  .strip        { grid-template-columns: 1fr 1fr; }
 }
